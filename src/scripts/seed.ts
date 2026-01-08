@@ -60,7 +60,7 @@ const seedDatabase = async () => {
         category: sunglasses._id,
         price: 149.99,
         discountPrice: 129.99,
-        images: ['https://example.com/aviator1.jpg', 'https://example.com/aviator2.jpg'],
+        images: ['/images/productimage1.jpg', '/images/productimage2.jpg'],
         stockQuantity: 50,
         sku: 'VINCA-AVI-001',
         frameType: 'aviator',
@@ -95,7 +95,7 @@ const seedDatabase = async () => {
         brand: 'Vinca',
         category: eyeglasses._id,
         price: 179.99,
-        images: ['https://example.com/round1.jpg'],
+        images: ['/images/productimage1.jpg', '/images/productimage2.jpg'],
         stockQuantity: 30,
         sku: 'VINCA-RND-001',
         frameType: 'round',
@@ -133,7 +133,7 @@ const seedDatabase = async () => {
         brand: 'Vinca',
         category: eyeglasses._id,
         price: 199.99,
-        images: ['https://example.com/browline1.jpg'],
+        images: ['/images/productimage1.jpg', '/images/productimage2.jpg'],
         stockQuantity: 25,
         sku: 'VINCA-BRW-001',
         frameType: 'browline',
@@ -158,6 +158,56 @@ const seedDatabase = async () => {
           availableTypes: ['single-vision', 'bifocal', 'progressive'],
           availableCoatings: ['anti-reflective', 'blue-light-filter', 'UV-protection', 'scratch-resistant'],
           availableTints: ['none']
+        }
+      },
+      {
+        name: 'Venice Beach Mask in Black',
+        description: 'Venice Beach Mask in black injected nylon with mirror blue lenses are from looks 46 and 52 of Balenciaga Winter 25 Collection.',
+        longDescription: 'Venice Beach Mask in black injected nylon with mirror blue lenses are from looks 46 and 52 of Balenciaga Winter 25 Collection. This unique mask design features injected nylon construction with polycarbonate mirror blue lenses. The frames offer 100% UVA/UVB protection and come with an interchangeable temple system featuring injection-molded temples or jacquard elastic strap with Balenciaga logo. The Balenciaga logo is lasered on the front lens, and the product is made in Italy.',
+        brand: 'Balenciaga',
+        category: sunglasses._id,
+        price: 0,
+        images: ['/images/productimage1.jpg', '/images/productimage2.jpg'],
+        inStock: true,
+        stockQuantity: 10,
+        sku: '852581T00031744',
+        frameType: 'round',
+        frameMaterial: 'plastic',
+        frameColor: {
+          primary: 'Black',
+          finish: 'matte'
+        },
+        lensType: 'sunglasses',
+        lensMaterial: 'polycarbonate',
+        gender: 'unisex',
+        size: {
+          eye: 52,
+          bridge: 18,
+          temple: 140
+        },
+        features: [
+          'Mask design',
+          'Interchangeable temple system',
+          'Injection-molded temples',
+          'Jacquard elastic strap with Balenciaga logo',
+          'Balenciaga logo lasered on front lens',
+          '100% UVA/UVB protection',
+          'Mirror blue lenses',
+          'Standard fit',
+          'Made in Italy'
+        ],
+        specifications: {
+          templeLength: '11.5 inch',
+          bridgeWidth: '0.04 inch'
+        },
+        careInstructions: 'Clean with microfiber cloth only. Avoid using paper towels or clothing. Store in provided case when not in use. Keep away from extreme temperatures.',
+        whatsIncluded: [
+          'Interchangeable temple system: injection-molded temples or jacquard elastic strap with Balenciaga logo'
+        ],
+        lensOptions: {
+          availableTypes: ['sunglasses'],
+          availableCoatings: ['UV-protection'],
+          availableTints: ['mirror blue']
         }
       }
     ];
