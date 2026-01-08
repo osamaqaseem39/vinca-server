@@ -3,11 +3,19 @@ import { AuthRequest } from '../types';
 import Category from '../models/Category.model';
 
 // @desc    Get all categories
-// @route   GET /api/categories
+// @route   GET /api/categories?parentOnly=true
 // @access  Public
-export const getCategories = async (_req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const getCategories = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const categories = await Category.find({ isActive: true }).sort({ name: 1 });
+    const { parentOnly } = req.query;
+    let query: any = { isActive: true };
+    
+    // If parentOnly is true, only return categories without a parent
+    if (parentOnly === 'true') {
+      query.parent = { $in: [null, undefined] };
+    }
+    
+    const categories = await Category.find(query).sort({ name: 1 }).populate('parent', 'name slug');
     res.json(categories);
   } catch (error) {
     next(error);
@@ -19,7 +27,7 @@ export const getCategories = async (_req: AuthRequest, res: Response, next: Next
 // @access  Public
 export const getCategory = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const category = await Category.findById(req.params.id);
+    const category = await Category.findById(req.params.id).populate('parent', 'name slug');
 
     if (!category) {
       res.status(404).json({ message: 'Category not found' });
@@ -27,6 +35,21 @@ export const getCategory = async (req: AuthRequest, res: Response, next: NextFun
     }
 
     res.json(category);
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Get child categories by parent
+// @route   GET /api/categories/parent/:parentId
+// @access  Public
+export const getCategoriesByParent = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const categories = await Category.find({ 
+      isActive: true, 
+      parent: req.params.parentId 
+    }).sort({ name: 1 });
+    res.json(categories);
   } catch (error) {
     next(error);
   }

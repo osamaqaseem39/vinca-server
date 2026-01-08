@@ -2,6 +2,7 @@ import express from 'express';
 import {
   getCategories,
   getCategory,
+  getCategoriesByParent,
   createCategory,
   updateCategory,
   deleteCategory
@@ -11,6 +12,7 @@ import { protect, admin } from '../middleware/auth.middleware';
 const router = express.Router();
 
 router.get('/', getCategories);
+router.get('/parent/:parentId', getCategoriesByParent);
 router.get('/:id', getCategory);
 router.post('/', protect, admin, createCategory);
 router.put('/:id', protect, admin, updateCategory);

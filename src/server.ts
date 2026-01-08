@@ -32,7 +32,14 @@ connectDB();
 // Security middleware
 app.use(helmet());
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  origin: [
+    'https://vinca-dashboard.vercel.app',
+    'https://vinca-website.vercel.app',
+    'https://vinca-server-one.vercel.app',
+    process.env.FRONTEND_URL || 'http://localhost:3000',
+    'http://localhost:5173', // Vite dev server
+    'http://localhost:3000', // Next.js dev server
+  ],
   credentials: true
 }));
 
