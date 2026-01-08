@@ -184,3 +184,105 @@ export const getProductsByBrand = async (req: AuthRequest, res: Response, next: 
     next(error);
   }
 };
+
+// @desc    Adjust product inventory
+// @route   PATCH /api/products/:id/inventory
+// @access  Private/Admin
+export const adjustInventory = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const { adjustmentType, quantity, reason } = req.body;
+    const product = await Product.findById(req.params.id);
+
+    if (!product) {
+      res.status(404).json({ message: 'Product not found' });
+      return;
+    }
+
+    if (!adjustmentType || quantity === undefined || quantity === null) {
+      res.status(400).json({ message: 'adjustmentType and quantity are required' });
+      return;
+    }
+
+    const quantityNum = parseInt(quantity);
+    if (isNaN(quantityNum) || quantityNum < 0) {
+      res.status(400).json({ message: 'Quantity must be a valid non-negative number' });
+      return;
+    }
+
+    const previousQuantity = product.stockQuantity;
+    let newQuantity: number;
+    switch (adjustmentType) {
+      case 'set':
+        newQuantity = Math.max(0, quantityNum);
+        break;
+      case 'add':
+        newQuantity = Math.max(0, product.stockQuantity + quantityNum);
+        break;
+      case 'subtract':
+        newQuantity = Math.max(0, product.stockQuantity - quantityNum);
+        break;
+      default:
+        res.status(400).json({ message: 'Invalid adjustment type. Must be "set", "add", or "subtract"' });
+        return;
+    }
+
+    product.stockQuantity = newQuantity;
+    product.inStock = newQuantity > 0;
+
+    // TODO: Add inventory history tracking here if needed
+    // Variables reason and previousQuantity are reserved for future inventory history feature
+    void reason;
+    void previousQuantity;
+    // await InventoryHistory.create({
+    //   product: product._id,
+    //   adjustmentType,
+    //   previousQuantity,
+    //   newQuantity,
+    //   reason,
+    //   adjustedBy: req.user?._id
+    // });
+
+    await product.save();
+
+    res.json({
+      message: 'Inventory updated successfully',
+      product: {
+        _id: product._id,
+        stockQuantity: product.stockQuantity,
+        inStock: product.inStock
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Get inventory summary
+// @route   GET /api/products/inventory/summary
+// @access  Private/Admin
+export const getInventorySummary = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const { lowStockThreshold = 10 } = req.query;
+    const threshold = parseInt(lowStockThreshold as string);
+
+    const totalProducts = await Product.countDocuments();
+    const inStockProducts = await Product.countDocuments({ inStock: true, stockQuantity: { $gt: 0 } });
+    const lowStockProducts = await Product.countDocuments({
+      inStock: true,
+      stockQuantity: { $gt: 0, $lte: threshold }
+    });
+    const outOfStockProducts = await Product.countDocuments({
+      $or: [{ inStock: false }, { stockQuantity: 0 }]
+    });
+
+    res.json({
+      totalProducts,
+      inStockProducts,
+      lowStockProducts,
+      outOfStockProducts,
+      lowStockThreshold: threshold
+    });
+  } catch (error) {
+    next(error);
+  }
+};

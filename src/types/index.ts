@@ -41,7 +41,11 @@ export interface IProduct extends Document {
   sku: string;
   frameType: 'full-rim' | 'semi-rimless' | 'rimless' | 'browline' | 'cat-eye' | 'round' | 'square' | 'aviator';
   frameMaterial: 'acetate' | 'metal' | 'titanium' | 'plastic' | 'wood' | 'carbon-fiber';
-  frameColor: string;
+  frameColor: {
+    primary: string;
+    secondary?: string;
+    finish?: 'matte' | 'glossy' | 'satin' | 'metallic';
+  };
   lensType: 'single-vision' | 'bifocal' | 'progressive' | 'reading' | 'sunglasses';
   lensMaterial?: 'polycarbonate' | 'trivex' | 'high-index' | 'glass';
   gender: 'men' | 'women' | 'unisex' | 'kids';

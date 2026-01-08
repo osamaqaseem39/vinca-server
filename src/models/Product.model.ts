@@ -71,9 +71,19 @@ const productSchema = new Schema<IProduct>(
       required: true
     },
     frameColor: {
-      type: String,
-      required: true,
-      trim: true
+      primary: {
+        type: String,
+        required: true,
+        trim: true
+      },
+      secondary: {
+        type: String,
+        trim: true
+      },
+      finish: {
+        type: String,
+        enum: ['matte', 'glossy', 'satin', 'metallic']
+      }
     },
     lensType: {
       type: String,
